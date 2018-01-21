@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">BConforto</string>
+    <string name="action_settings">Settings</string>
+    <string name="horas">Horas</string>
+    <string name="cloth">Pano</string>
+    <string name="Calc">Calcular</string>
+    <string name="metros">Metros</string>
+    <string name="desconto">Desconto</string>
+    <string name="ClothPrice">Preço</string>
+    <string name="ClothName">Nome</string>
+    <string name="HourPrice">Preço Hora</string>
+    <string name="Save">Gravar</string>
+    <string name="Cloth">Pano</string>
+    <string name="Add">Adicionar</string>
+</resources>
