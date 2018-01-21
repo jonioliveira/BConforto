@@ -1,8 +1,67 @@
 language: android
+sudo: required
+jdk: oraclejdk8
+before_cache:
+  -rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+  -rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+cache:
+ directories:
+  -$HOME/.gradle/caches/
+  -$HOME/.gradle/wrapper/
+env:
+ global:
+  - ANDROID_API=27
+  - EMULATOR_API=19
+  - ANDROID_BUILD_TOOLS=27.0.2
+  - ADB_INSTALL_TIMEOUT=5 # minutes
+  - secure: "kZqMz3T3/5thGzTz88YpwvJcdHwbnob3GUtpgvJxEFqckrGyaa03p9vpXZ4A0j2oFbyybVSgrCwPxec1/2xg96q7+poUBBPS8ZJUeiRPnmTbftbobX3ew/S4XdShsXjWLOqkw9eaUi22eIVVbR85zhGM1sPExEg9Vz7exLrJHHVAh1uVYqrsu0oJzXxfYKgTyB/XxdgHCN/9SzHlj98WVMWzD2ztg7sQiwvO3hVOptAC8cAieTtUxci3S4Mi5tmZMvzzNB29eeia7qZ5RfVN9CYQIQwynI9kMUqn6LPH8DgZuVKnyYIrWNcMzaOwVLUc+jFPBZ98fnb3o9QdGW9r3vOWqNRK2jRMz478ateuZ9UOVz6dHn7HPfWj3IfH6ur+g4PSSGJ2XXQlSx7WROpUeTRY7x7iPtq6wckAjASNLZRojwGEAdGrHzTJtzMXe7adAj953bj8qb9nvFDXubDoaVyKRtlwZW0Lyn7f6JbSZ/y3PgHgc+p3SvfNK8erRYUXO+HepvLolWv9RbnrZ5z9UO/MHsZgCLRxvzuCzGlcqiwlf0z35BbnX51vmzI2HALQyMVQx0SxhJH0qHJ7PANhc/N4bWA18okU0Mh9i1o+6g1ZiTEOkURzZaZ1xFQ5phbxGiXGoS5KeX6u6s/lJp/n/8f0Gb/+vc9bC82Q1Tppj74="
+  - secure: "WdEr9MLL1rIQXBUwo4Dr2U8SRRhtv7UqIREtDfrjs5DEHH5Y6GO7CE9Z0/9M+RmTM+uqsxWi0gLdCg6PHKxK7D8sVf7RaXKZ7KuI0nbmMfJbkSEfK5uojim2B4+DbetAd0nt/qRJS7Jv0sl0OEOSpdlvmhMAP9EUaxOlgne8dvOsSn2WXuCPcb+jvG/RkFUbIbwkLE1wrvB35oDV6M2BD7t5isNY2X5nYj25ZMQUhcE6BcAKbdOBy6Ng6AfBL2Xr0tYG76r7iJQtAPRya6o+41y8epj6c84cQglT9bdYzARc94a40bViPO5tQ2HvlhQJK4P/eOaSPlqXgwlQ3ZOn+5AT/AVXWcBR+miI8Mu/T5eh8TJBHOPX7zNbDGpbb7G1DmPLhO62ibbXHW1bzR+HK4a/y+/93uBqmSS8jNeoWxp0RWIlszI5YGndnNF/Iwjb67ixUKQRUcyXSDDEkif09RFFKV+5zseBKfrayMGa1p4aBUVtL8SUVyw0+nBu6A8IiPLtVl0tIjs83+MMvi9b6XGcgnB14fHhksgrDlwnHLZmDHuqMnLEf13qzhuERmX4bYbFNci/jWFwi4mq7yRFJF3URjv7L93soKu6M/fY/TAzrPVYk+//9h9aOj0bg8++uzomlDFFSrO+ju6GG3HLE9oOBkV3HHR+LZogZ+8S7Es="
 android:
-  components:
-    # The BuildTools version used by your project
-    - build-tools-27.0.2
+ components:
+  - tools
+  - platform-tools
+  - build-tools-$ANDROID_BUILD_TOOLS
+  - android-$ANDROID_API
+  - android-$EMULATOR_API_LEVEL
+  - extra-google-m2repository
+  - extra-android-m2repository # for design library
+  - addon-google_apis-google-19 # google play services
+  - sys-img-armeabi-v7a-addon-google_apis-google-$ANDROID_API_LEVEL
+  - sys-img-armeabi-v7a-addon-google_apis-google-$EMULATOR_API_LEVEL
+licenses:
+  - android-sdk-preview-license-.+
+  - android-sdk-license-.+
+  - google-gdk-license-.+
+branches:
+  only:
+  - master
+before_install:
+  - openssl aes-256-cbc -K $encrypted_9f3565d08722_key -iv $encrypted_9f3565d08722_iv -in keystore.enc -out keystore -d
+  - chmod +x gradlew
+before_script:
+  - echo no | android create avd --force -n test -t android-19 --abi armeabi-v7a
+  - emulator -avd test -no-skin -no-audio -no-window &
+  - android-wait-for-emulator
+  - adb shell input keyevent 82 &
+script:
+- "./gradlew clean build connectedCheck -PdisablePreDex --stacktrace"
 
-    # The SDK version used to compile your project
-    - android-27
+before_deploy:
+- cp $TRAVIS_BUILD_DIR/keystore.jks $HOME
+- cd app/build/outputs/apk/
+- jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore $HOME/keystore.jks -storepass $storepass -keypass $keypass app-release-unsigned.apk keystore
+
+# Verification
+- jarsigner -verify app-release-unsigned.apk
+- "${ANDROID_HOME}/build-tools/24.0.2/zipalign -v 4 app-release-unsigned.apk bconforto.apk"
+
+deploy:
+  provider: releases
+  file: bconforto.apk
+  skip_cleanup: true
+
+  on:
+    repo: jonioliveira/bconforto
+    tags: true
+    jdk: oraclejdk8
+  api_key: "HLTLSy1oOyTir94WG0XUNOwZtNHHl7skYnR53RXJiss49+T4yICC/IsGajkG42OPGUGztKQfug+zoif029XDCVdacPAw+0MwGRijBDnWE5fYKlmH8cdqE7Cn+xXAWisP8wzG+0nk0Lt7hSw5jUBzHz9Q7PHDVZQd4tJSQz3LnbRVtIsWziwhUnu3G5GAO9Ynhyqxjnnd0JTtG5Ni5Dulfl2PvICTPfvr7c8h7SDCTXZmXD7xS7H7E0lK77hleyN45s5GCp0lwwjSxszFYpYl6ATpDo6XpetfdhAXgZPz86hw3Ss6PnSuDl7CcjWq4gK/5pRUgaS2PMx+9faIokvpjODyCpVNjblbjoeLtj2vvcQKKSaVeiE7zC7KoUcjO0Cl4T+98ImD5XIDyZ+LjwqTbGSRV4FWZddmXU66u50r0Et1vdPFYrVssaLNRATsB2XphxmNjsH/OMpua9egu21KuGXwqdrN2jqfyZ5TbMV+b0RQ5/cdJ+esK+fm3+j3Uz68gd6n3nEYmMcD+5FTLdOFn11FkyUS6Oggi25s4d5got9x05KM9YsxU4krozASSrkA1vv5Corn6bKM53mk48JBUZrw0ZXJEFSt6V2W/S0h8bUlqML/DLgfQKu+7c3ba0Vzf1Dim8ZFtARuqOXF/n+K/6zkuJO/jmAosxyyO2C3Tlk="

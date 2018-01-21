@@ -166,3 +166,5 @@ gradle.properties
 
 # End of https://www.gitignore.io/api/android,androidstudio
 !/gradle.properties
+/keystore
+/app/release/
