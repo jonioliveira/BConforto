@@ -49,7 +49,7 @@ before_deploy:
 
 # Verification
 - jarsigner -verify app-release-unsigned.apk
-- "${ANDROID_HOME}/build-tools/24.0.2/zipalign -v 4 app-release-unsigned.apk bconforto.apk"
+- "${ANDROID_HOME}/build-tools/27.0.2/zipalign -v 4 app-release-unsigned.apk bconforto.apk"
 
 deploy:
   provider: releases
@@ -57,7 +57,7 @@ deploy:
   skip_cleanup: true
 
   on:
-    repo: jonioliveira/bconforto
+    repo: jonioliveira/BConforto
     tags: true
     jdk: oraclejdk8
   api_key: "HLTLSy1oOyTir94WG0XUNOwZtNHHl7skYnR53RXJiss49+T4yICC/IsGajkG42OPGUGztKQfug+zoif029XDCVdacPAw+0MwGRijBDnWE5fYKlmH8cdqE7Cn+xXAWisP8wzG+0nk0Lt7hSw5jUBzHz9Q7PHDVZQd4tJSQz3LnbRVtIsWziwhUnu3G5GAO9Ynhyqxjnnd0JTtG5Ni5Dulfl2PvICTPfvr7c8h7SDCTXZmXD7xS7H7E0lK77hleyN45s5GCp0lwwjSxszFYpYl6ATpDo6XpetfdhAXgZPz86hw3Ss6PnSuDl7CcjWq4gK/5pRUgaS2PMx+9faIokvpjODyCpVNjblbjoeLtj2vvcQKKSaVeiE7zC7KoUcjO0Cl4T+98ImD5XIDyZ+LjwqTbGSRV4FWZddmXU66u50r0Et1vdPFYrVssaLNRATsB2XphxmNjsH/OMpua9egu21KuGXwqdrN2jqfyZ5TbMV+b0RQ5/cdJ+esK+fm3+j3Uz68gd6n3nEYmMcD+5FTLdOFn11FkyUS6Oggi25s4d5got9x05KM9YsxU4krozASSrkA1vv5Corn6bKM53mk48JBUZrw0ZXJEFSt6V2W/S0h8bUlqML/DLgfQKu+7c3ba0Vzf1Dim8ZFtARuqOXF/n+K/6zkuJO/jmAosxyyO2C3Tlk="
