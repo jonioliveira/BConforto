@@ -3,11 +3,16 @@ package com.joniroliveira.bconforto.ui;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Canvas;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatEditText;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
@@ -15,6 +20,9 @@ import android.widget.Toast;
 import com.joniroliveira.bconforto.R;
 import com.joniroliveira.bconforto.data.model.Cloth;
 import com.joniroliveira.bconforto.data.preferences.Settings;
+import com.joniroliveira.bconforto.ui.adapters.ClothRecyclerViewAdapter;
+import com.joniroliveira.bconforto.ui.controllers.SwipeController;
+import com.joniroliveira.bconforto.ui.controllers.SwipeControllerActions;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -27,6 +35,8 @@ public class SettingsActivity extends AppCompatActivity {
 
     @BindView(R.id.hour_resale_price) AppCompatEditText hourResalePrice;
     @BindView(R.id.hour_consumer_price) AppCompatEditText hourConsumerPrice;
+    @BindView(R.id.clothList) RecyclerView clothRecyclerView;
+    private ClothRecyclerViewAdapter clothRecyclerViewAdapter;
 
     public static void start(Context context) {
         Intent starter = new Intent(context, SettingsActivity.class);
@@ -59,6 +69,26 @@ public class SettingsActivity extends AppCompatActivity {
         hourResalePrice.setText(String.valueOf(price));
         price = Settings.getPriceConsumer(this);
         hourConsumerPrice.setText(String.valueOf(price));
+        clothRecyclerViewAdapter = new ClothRecyclerViewAdapter(realm);
+        clothRecyclerView.setAdapter(clothRecyclerViewAdapter);
+        clothRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+
+        final SwipeController swipeController = new SwipeController(new SwipeControllerActions() {
+            @Override
+            public void onRightClicked(int position) {
+                clothRecyclerViewAdapter.removeData(position);
+                super.onRightClicked(position);
+            }
+        });
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeController);
+        itemTouchHelper.attachToRecyclerView(clothRecyclerView);
+
+        clothRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
+                swipeController.onDraw(c);
+            }
+        });
     }
 
     @Override
@@ -113,7 +143,6 @@ public class SettingsActivity extends AppCompatActivity {
 
     private void insertInDb(final String name, final String price) {
 
-
         realm.executeTransactionAsync(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
@@ -131,6 +160,8 @@ public class SettingsActivity extends AppCompatActivity {
                 Toast.makeText(SettingsActivity.this, "Erro ao Adicionar o pano", Toast.LENGTH_SHORT).show();
             }
         });
+
+        clothRecyclerViewAdapter.updateData();
     }
 
 
