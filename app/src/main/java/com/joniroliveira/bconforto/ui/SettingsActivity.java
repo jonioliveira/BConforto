@@ -25,7 +25,8 @@ public class SettingsActivity extends AppCompatActivity {
 
     Realm realm;
 
-    @BindView(R.id.hour_price) AppCompatEditText hourPrice;
+    @BindView(R.id.hour_resale_price) AppCompatEditText hourResalePrice;
+    @BindView(R.id.hour_consumer_price) AppCompatEditText hourConsumerPrice;
 
     public static void start(Context context) {
         Intent starter = new Intent(context, SettingsActivity.class);
@@ -54,8 +55,10 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        float price = Settings.getPrice(this);
-        hourPrice.setText(String.valueOf(price));
+        float price = Settings.getPriceResale(this);
+        hourResalePrice.setText(String.valueOf(price));
+        price = Settings.getPriceConsumer(this);
+        hourConsumerPrice.setText(String.valueOf(price));
     }
 
     @Override
@@ -96,9 +99,15 @@ public class SettingsActivity extends AppCompatActivity {
 
     }
 
-    @OnClick(R.id.save_hour_button)
-    public void saveHourPrice(){
-        Settings.writePrice(this, Float.parseFloat(hourPrice.getText().toString()));
+    @OnClick(R.id.save_hour_resale_price_button)
+    public void saveHourResalePriceButton(){
+        Settings.writePriceResale(this, Float.parseFloat(hourResalePrice.getText().toString()));
+        Toast.makeText(SettingsActivity.this, "Preço gravado", Toast.LENGTH_SHORT).show();
+    }
+
+    @OnClick(R.id.save_hour_consumer_price_button)
+    public void saveHourPriceFinal(){
+        Settings.writePriceConsumer(this, Float.parseFloat(hourConsumerPrice.getText().toString()));
         Toast.makeText(SettingsActivity.this, "Preço gravado", Toast.LENGTH_SHORT).show();
     }
 

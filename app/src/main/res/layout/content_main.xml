@@ -21,6 +21,29 @@
             android:layout_gravity="start"
             android:gravity="center_vertical"
             android:paddingStart="10dp"
+            android:text="@string/estimate_type"/>
+
+        <android.support.v7.widget.AppCompatSpinner
+            android:id="@+id/estimateTypeSpinner"
+            android:layout_width="0dp"
+            android:layout_height="43dp"
+            android:layout_weight="0.5">
+        </android.support.v7.widget.AppCompatSpinner>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="1">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:layout_gravity="start"
+            android:gravity="center_vertical"
+            android:paddingStart="10dp"
             android:text="@string/horas"/>
 
         <android.support.v7.widget.AppCompatEditText
