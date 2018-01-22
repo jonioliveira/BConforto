@@ -11,17 +11,29 @@ import static android.content.Context.MODE_PRIVATE;
 public class Settings {
 
     public static final String MyPREFERENCES = "MyPrefs" ;
-    public static final String PRICE = "priceKey";
+    public static final String PRICE_RESALE = "resalePriceKey";
+    public static final String PRICE_CONSUMER = "consumerPriceKey";
 
-    public static void writePrice(Context context, float value){
+    public static void writePriceResale(Context context, float value){
         SharedPreferences.Editor editor = context.getApplicationContext().getSharedPreferences(MyPREFERENCES, MODE_PRIVATE).edit();
-        editor.putFloat(PRICE, value);
-        editor.commit();
+        editor.putFloat(PRICE_RESALE, value);
+        editor.apply();
     }
 
-    public static float getPrice(Context context){
+    public static float getPriceResale(Context context){
         SharedPreferences preferences = context.getApplicationContext().getSharedPreferences(MyPREFERENCES, MODE_PRIVATE);
-        return preferences.getFloat(PRICE, 0);
+        return preferences.getFloat(PRICE_RESALE, 0);
+    }
+
+    public static void writePriceConsumer(Context context, float value){
+        SharedPreferences.Editor editor = context.getApplicationContext().getSharedPreferences(MyPREFERENCES, MODE_PRIVATE).edit();
+        editor.putFloat(PRICE_CONSUMER, value);
+        editor.apply();
+    }
+
+    public static float getPriceConsumer(Context context){
+        SharedPreferences preferences = context.getApplicationContext().getSharedPreferences(MyPREFERENCES, MODE_PRIVATE);
+        return preferences.getFloat(PRICE_CONSUMER, 0);
     }
 
 }

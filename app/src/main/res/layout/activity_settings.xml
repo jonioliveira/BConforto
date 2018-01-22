@@ -30,7 +30,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
-            android:text="@string/HourPrice"
+            android:text="@string/HourPriceResale"
             android:layout_gravity="center_vertical"
             android:paddingStart="@dimen/pdStart"
             android:paddingEnd="@dimen/pdStart"/>
@@ -41,13 +41,50 @@
             android:layout_weight="0.5"
             android:weightSum="1">
             <android.support.design.widget.TextInputEditText
-                android:id="@+id/hour_price"
+                android:id="@+id/hour_resale_price"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"/>
 
             <Button
-                android:id="@+id/save_hour_button"
+                android:id="@+id/save_hour_resale_price_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/Save"
+                android:layout_weight="0.5"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="1"
+        >
+        <android.support.v7.widget.AppCompatTextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="@string/HourPriceFinal"
+            android:layout_gravity="center_vertical"
+            android:paddingStart="@dimen/pdStart"
+            android:paddingEnd="@dimen/pdStart"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:weightSum="1">
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/hour_consumer_price"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"/>
+
+            <Button
+                android:id="@+id/save_hour_consumer_price_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/Save"

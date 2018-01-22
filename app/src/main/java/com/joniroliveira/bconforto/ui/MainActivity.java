@@ -7,6 +7,8 @@ import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Adapter;
+import android.widget.ArrayAdapter;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,6 +49,9 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.priceWithoutTax)
     TextView priceWithoutTax;
 
+    @BindView(R.id.estimateTypeSpinner)
+    AppCompatSpinner estimateTypeSpinner;
+
     Realm realm;
 
     private ArrayList clothList;
@@ -69,6 +74,9 @@ public class MainActivity extends AppCompatActivity {
         Timber.i("asdf %s", clothList.size());
         SpinnerAdapter adapter = new ClothListAdapter(this, android.R.layout.simple_spinner_item, clothList);
         clothSpinner.setAdapter(adapter);
+        ArrayAdapter estimateAdapter = ArrayAdapter.createFromResource(this, R.array.estimate_type, android.R.layout.simple_spinner_item);
+        estimateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        estimateTypeSpinner.setAdapter(estimateAdapter);
     }
 
     @Override
@@ -111,7 +119,16 @@ public class MainActivity extends AppCompatActivity {
                 discountValue = Integer.parseInt(discount.getText().toString());
             }
 
-            float hoursPrice = Settings.getPrice(this);
+            float hoursPrice;
+
+            Timber.i("Spinner position %s", estimateTypeSpinner.getSelectedItemPosition());
+
+            if (estimateTypeSpinner.getSelectedItemPosition() == 0){
+                hoursPrice = Settings.getPriceResale(this);
+            }else {
+                hoursPrice = Settings.getPriceConsumer(this);
+            }
+
 
             if (hoursPrice == 0){
                 Toast.makeText(this, "O preço das horas não está definido", Toast.LENGTH_LONG).show();

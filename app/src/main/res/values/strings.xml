@@ -8,8 +8,10 @@
     <string name="desconto">Desconto</string>
     <string name="ClothPrice">Preço</string>
     <string name="ClothName">Nome</string>
-    <string name="HourPrice">Preço Hora</string>
+    <string name="HourPriceResale">Preço Hora Revenda</string>
+    <string name="HourPriceFinal">Preço Hora C. Final</string>
     <string name="Save">Gravar</string>
     <string name="Cloth">Pano</string>
     <string name="Add">Adicionar</string>
+    <string name="estimate_type">Tipo</string>
 </resources>
