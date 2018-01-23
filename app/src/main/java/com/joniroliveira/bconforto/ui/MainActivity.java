@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Adapter;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,6 +53,9 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.estimateTypeSpinner)
     AppCompatSpinner estimateTypeSpinner;
 
+    @BindView(R.id.foam)
+    CheckBox foamCheckbox;
+
     Realm realm;
 
     private ArrayList clothList;
@@ -71,7 +75,6 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         realm = Realm.getDefaultInstance();
         clothList = new ArrayList(realm.where(Cloth.class).findAll());
-        Timber.i("asdf %s", clothList.size());
         SpinnerAdapter adapter = new ClothListAdapter(this, android.R.layout.simple_spinner_item, clothList);
         clothSpinner.setAdapter(adapter);
         ArrayAdapter estimateAdapter = ArrayAdapter.createFromResource(this, R.array.estimate_type, android.R.layout.simple_spinner_item);
@@ -133,22 +136,25 @@ public class MainActivity extends AppCompatActivity {
             if (hoursPrice == 0){
                 Toast.makeText(this, "O preço das horas não está definido", Toast.LENGTH_LONG).show();
             }else{
+                float priceFoam = Settings.getPriceFoam(this);
+                if (foamCheckbox.isChecked() && priceFoam == 0){
+                    Toast.makeText(this, "O preço da espuma não está definido", Toast.LENGTH_LONG).show();
+                }else{
+                    CalculatePrice.Price calculate = CalculatePrice.calculate(
+                            Double.parseDouble(hours.getText().toString()),
+                            hoursPrice,
+                            ((Cloth) clothList.get(clothSpinner.getSelectedItemPosition())).getPrice(),
+                            Double.parseDouble(clothMeters.getText().toString()),
+                            priceFoam,
+                            discountValue);
 
-                CalculatePrice.Price calculate = CalculatePrice.calculate(
-                        Double.parseDouble(hours.getText().toString()),
-                        hoursPrice,
-                        ((Cloth) clothList.get(clothSpinner.getSelectedItemPosition())).getPrice(),
-                        Double.parseDouble(clothMeters.getText().toString()),
-                        discountValue);
+                    DecimalFormat df = new DecimalFormat("#.###");
+                    df.setRoundingMode(RoundingMode.CEILING);
 
-                DecimalFormat df = new DecimalFormat("#.####");
-                df.setRoundingMode(RoundingMode.CEILING);
-
-                priceWithTax.setText(df.format(calculate.getPriceWithTax()));
-                priceWithoutTax.setText(df.format(calculate.getPriceWithoutTax()));
+                    priceWithTax.setText(df.format(calculate.getPriceWithTax()));
+                    priceWithoutTax.setText(df.format(calculate.getPriceWithoutTax()));
+                }
             }
-
-
         }
     }
 }

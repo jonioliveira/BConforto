@@ -36,6 +36,7 @@ public class SettingsActivity extends AppCompatActivity {
     @BindView(R.id.hour_resale_price) AppCompatEditText hourResalePrice;
     @BindView(R.id.hour_consumer_price) AppCompatEditText hourConsumerPrice;
     @BindView(R.id.clothList) RecyclerView clothRecyclerView;
+    @BindView(R.id.foam_price) AppCompatEditText foamPrice;
     private ClothRecyclerViewAdapter clothRecyclerViewAdapter;
 
     public static void start(Context context) {
@@ -107,12 +108,9 @@ public class SettingsActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         //you should edit this to fit your needs
         builder.setTitle("Adicionar Pano");
-
-
         LayoutInflater inflater = LayoutInflater.from(this);
         final View alertView = inflater.inflate(R.layout.add_cloth, null);
         builder.setView(alertView);
-
         // Set up the buttons
         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
@@ -126,23 +124,17 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
         builder.show();
-
     }
 
-    @OnClick(R.id.save_hour_resale_price_button)
-    public void saveHourResalePriceButton(){
+    @OnClick(R.id.save_button)
+    public void save(){
         Settings.writePriceResale(this, Float.parseFloat(hourResalePrice.getText().toString()));
-        Toast.makeText(SettingsActivity.this, "Preço gravado", Toast.LENGTH_SHORT).show();
-    }
-
-    @OnClick(R.id.save_hour_consumer_price_button)
-    public void saveHourPriceFinal(){
         Settings.writePriceConsumer(this, Float.parseFloat(hourConsumerPrice.getText().toString()));
-        Toast.makeText(SettingsActivity.this, "Preço gravado", Toast.LENGTH_SHORT).show();
+        Settings.writePriceFoam(this, Float.parseFloat(foamPrice.getText().toString()));
+        Toast.makeText(SettingsActivity.this, "Preços gravados", Toast.LENGTH_SHORT).show();
     }
 
     private void insertInDb(final String name, final String price) {
-
         realm.executeTransactionAsync(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
@@ -153,6 +145,7 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onSuccess() {
                 Toast.makeText(SettingsActivity.this, "Pano adicionado", Toast.LENGTH_SHORT).show();
+                clothRecyclerViewAdapter.updateData();
             }
         }, new Realm.Transaction.OnError() {
             @Override
@@ -160,8 +153,6 @@ public class SettingsActivity extends AppCompatActivity {
                 Toast.makeText(SettingsActivity.this, "Erro ao Adicionar o pano", Toast.LENGTH_SHORT).show();
             }
         });
-
-        clothRecyclerViewAdapter.updateData();
     }
 
 
