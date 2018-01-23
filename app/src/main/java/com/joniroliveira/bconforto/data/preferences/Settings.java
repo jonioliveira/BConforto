@@ -13,6 +13,7 @@ public class Settings {
     public static final String MyPREFERENCES = "MyPrefs" ;
     public static final String PRICE_RESALE = "resalePriceKey";
     public static final String PRICE_CONSUMER = "consumerPriceKey";
+    public static final String PRICE_FOAM = "foamKey";
 
     public static void writePriceResale(Context context, float value){
         SharedPreferences.Editor editor = context.getApplicationContext().getSharedPreferences(MyPREFERENCES, MODE_PRIVATE).edit();
@@ -34,6 +35,17 @@ public class Settings {
     public static float getPriceConsumer(Context context){
         SharedPreferences preferences = context.getApplicationContext().getSharedPreferences(MyPREFERENCES, MODE_PRIVATE);
         return preferences.getFloat(PRICE_CONSUMER, 0);
+    }
+
+    public static void writePriceFoam(Context context,  float value){
+        SharedPreferences.Editor editor = context.getApplicationContext().getSharedPreferences(MyPREFERENCES, MODE_PRIVATE).edit();
+        editor.putFloat(PRICE_FOAM, value);
+        editor.apply();
+    }
+
+    public static float getPriceFoam(Context context){
+        SharedPreferences preferences = context.getApplicationContext().getSharedPreferences(MyPREFERENCES, MODE_PRIVATE);
+        return preferences.getFloat(PRICE_FOAM, 0);
     }
 
 }

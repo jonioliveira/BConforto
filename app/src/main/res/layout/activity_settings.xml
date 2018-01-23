@@ -23,48 +23,36 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:weightSum="1"
         >
         <android.support.v7.widget.AppCompatTextView
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
             android:text="@string/HourPriceResale"
             android:layout_gravity="center_vertical"
             android:paddingStart="@dimen/pdStart"
-            android:paddingEnd="@dimen/pdStart"/>
+            android:paddingEnd="@dimen/pdStart"
+            />
 
-        <LinearLayout
-            android:layout_width="0dp"
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/hour_resale_price"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
-            android:weightSum="1">
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/hour_resale_price"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.5"/>
-
-            <Button
-                android:id="@+id/save_hour_resale_price_button"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/Save"
-                android:layout_weight="0.5"/>
-
-        </LinearLayout>
+            android:textAlignment="textEnd"/>
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:weightSum="1"
         >
         <android.support.v7.widget.AppCompatTextView
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
             android:text="@string/HourPriceFinal"
@@ -72,27 +60,43 @@
             android:paddingStart="@dimen/pdStart"
             android:paddingEnd="@dimen/pdStart"/>
 
-        <LinearLayout
-            android:layout_width="0dp"
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/hour_consumer_price"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
-            android:weightSum="1">
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/hour_consumer_price"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.5"/>
-
-            <Button
-                android:id="@+id/save_hour_consumer_price_button"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/Save"
-                android:layout_weight="0.5"/>
-
-        </LinearLayout>
+            android:textAlignment="textEnd"/>
 
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:weightSum="1"
+        >
+        <android.support.v7.widget.AppCompatTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="@string/foamPrice"
+            android:layout_gravity="center_vertical"
+            android:paddingStart="@dimen/pdStart"
+            android:paddingEnd="@dimen/pdStart"/>
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/foam_price"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:textAlignment="textEnd"/>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/save_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/Save"/>
 
     <LinearLayout
         android:layout_width="match_parent"

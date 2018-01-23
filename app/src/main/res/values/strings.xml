@@ -5,13 +5,15 @@
     <string name="cloth">Pano</string>
     <string name="Calc">Calcular</string>
     <string name="metros">Metros</string>
-    <string name="desconto">Desconto</string>
+    <string name="desconto">Desconto (%)</string>
     <string name="ClothPrice">Preço</string>
     <string name="ClothName">Nome</string>
     <string name="HourPriceResale">Preço Hora Revenda</string>
-    <string name="HourPriceFinal">Preço Hora C. Final</string>
+    <string name="HourPriceFinal">Preço Hora Consumidor Final</string>
     <string name="Save">Gravar</string>
     <string name="Cloth">Pano</string>
     <string name="Add">Adicionar</string>
     <string name="estimate_type">Tipo</string>
+    <string name="foam">Espuma</string>
+    <string name="foamPrice">Preço Espuma</string>
 </resources>

@@ -10,8 +10,8 @@ import com.joniroliveira.bconforto.data.preferences.Settings;
 
 public class CalculatePrice {
 
-    public static Price calculate(double hours, float hoursPrice, double clothPrice, double quantity, int discount){
-        double price = (hours * hoursPrice) + (clothPrice * quantity);
+    public static Price calculate(double hours, float hoursPrice, double clothPrice, double quantity, float foamPrice,int discount){
+        double price = (hours * hoursPrice) + (clothPrice * quantity) + foamPrice;
         float aux = (float) (discount/100.0);
         double discountValue = price * aux;
         price = price - discountValue;
