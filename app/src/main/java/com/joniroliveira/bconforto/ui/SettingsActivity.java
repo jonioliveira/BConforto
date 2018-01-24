@@ -24,6 +24,8 @@ import com.joniroliveira.bconforto.ui.adapters.ClothRecyclerViewAdapter;
 import com.joniroliveira.bconforto.ui.controllers.SwipeController;
 import com.joniroliveira.bconforto.ui.controllers.SwipeControllerActions;
 
+import java.util.Set;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -70,6 +72,9 @@ public class SettingsActivity extends AppCompatActivity {
         hourResalePrice.setText(String.valueOf(price));
         price = Settings.getPriceConsumer(this);
         hourConsumerPrice.setText(String.valueOf(price));
+        price = Settings.getPriceFoam(this);
+        foamPrice.setText(String.valueOf(price));
+
         clothRecyclerViewAdapter = new ClothRecyclerViewAdapter(realm);
         clothRecyclerView.setAdapter(clothRecyclerViewAdapter);
         clothRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
@@ -128,10 +133,16 @@ public class SettingsActivity extends AppCompatActivity {
 
     @OnClick(R.id.save_button)
     public void save(){
-        Settings.writePriceResale(this, Float.parseFloat(hourResalePrice.getText().toString()));
-        Settings.writePriceConsumer(this, Float.parseFloat(hourConsumerPrice.getText().toString()));
-        Settings.writePriceFoam(this, Float.parseFloat(foamPrice.getText().toString()));
-        Toast.makeText(SettingsActivity.this, "Preços gravados", Toast.LENGTH_SHORT).show();
+        if (!hourConsumerPrice.getText().toString().isEmpty() &&
+                !hourResalePrice.getText().toString().isEmpty() &&
+                !foamPrice.getText().toString().isEmpty()){
+            Settings.writePriceResale(this, Float.parseFloat(hourResalePrice.getText().toString()));
+            Settings.writePriceConsumer(this, Float.parseFloat(hourConsumerPrice.getText().toString()));
+            Settings.writePriceFoam(this, Float.parseFloat(foamPrice.getText().toString()));
+            Toast.makeText(SettingsActivity.this, "Preços gravados", Toast.LENGTH_SHORT).show();
+        } else{
+            Toast.makeText(SettingsActivity.this, "Um dos preços está em branco", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void insertInDb(final String name, final String price) {

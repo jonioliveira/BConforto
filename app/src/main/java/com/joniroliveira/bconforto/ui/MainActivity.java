@@ -140,6 +140,11 @@ public class MainActivity extends AppCompatActivity {
                 if (foamCheckbox.isChecked() && priceFoam == 0){
                     Toast.makeText(this, "O preço da espuma não está definido", Toast.LENGTH_LONG).show();
                 }else{
+
+                    if (!foamCheckbox.isChecked()){
+                        priceFoam = 0;
+                    }
+
                     CalculatePrice.Price calculate = CalculatePrice.calculate(
                             Double.parseDouble(hours.getText().toString()),
                             hoursPrice,
