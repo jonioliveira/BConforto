@@ -16,4 +16,5 @@
     <string name="estimate_type">Tipo</string>
     <string name="foam">Espuma</string>
     <string name="foamPrice">Preço Espuma</string>
+    <string name="margin">Margem</string>
 </resources>

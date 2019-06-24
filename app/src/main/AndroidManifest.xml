@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.joniroliveira.bconforto">
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".Bconforto"
@@ -16,16 +19,17 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity android:name=".ui.SettingsActivity"
-                    android:theme="@style/AppTheme.NoActionBar"></activity>
+                    android:theme="@style/AppTheme.NoActionBar"/>
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="2df7bd1a8e3a209e3511925f4695f2167809486f" />
     </application>
 
-    <uses-permission android:name="android.permission.INTERNET" />
 </manifest>
