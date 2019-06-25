@@ -14,6 +14,8 @@ public class Settings {
     public static final String PRICE_RESALE = "resalePriceKey";
     public static final String PRICE_CONSUMER = "consumerPriceKey";
     public static final String PRICE_FOAM = "foamKey";
+    public static final String MARGIN_RESALE = "resaleMarginKey";
+    public static final String MARGIN_CONSUMER = "resaleMarginConsumer";
 
     public static void writePriceResale(Context context, float value){
         SharedPreferences.Editor editor = context.getApplicationContext().getSharedPreferences(MyPREFERENCES, MODE_PRIVATE).edit();
@@ -46,6 +48,28 @@ public class Settings {
     public static float getPriceFoam(Context context){
         SharedPreferences preferences = context.getApplicationContext().getSharedPreferences(MyPREFERENCES, MODE_PRIVATE);
         return preferences.getFloat(PRICE_FOAM, 0);
+    }
+
+    public static void writeMarginResale(Context context,  int value){
+        SharedPreferences.Editor editor = context.getApplicationContext().getSharedPreferences(MyPREFERENCES, MODE_PRIVATE).edit();
+        editor.putFloat(MARGIN_RESALE, value);
+        editor.apply();
+    }
+
+    public static float getMarginResale(Context context){
+        SharedPreferences preferences = context.getApplicationContext().getSharedPreferences(MyPREFERENCES, MODE_PRIVATE);
+        return preferences.getFloat(MARGIN_RESALE, 0);
+    }
+
+    public static void writeMarginConsumer(Context context,  int value){
+        SharedPreferences.Editor editor = context.getApplicationContext().getSharedPreferences(MyPREFERENCES, MODE_PRIVATE).edit();
+        editor.putFloat(MARGIN_CONSUMER, value);
+        editor.apply();
+    }
+
+    public static float getMarginConsumer(Context context){
+        SharedPreferences preferences = context.getApplicationContext().getSharedPreferences(MyPREFERENCES, MODE_PRIVATE);
+        return preferences.getFloat(MARGIN_CONSUMER, 0);
     }
 
 }

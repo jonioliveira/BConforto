@@ -7,7 +7,7 @@ import io.realm.annotations.PrimaryKey;
 
 public class Cloth extends RealmObject {
     @PrimaryKey
-    public String id = UUID.randomUUID().toString();;
+    public String id = UUID.randomUUID().toString();
     private String name;
     private float price;
 

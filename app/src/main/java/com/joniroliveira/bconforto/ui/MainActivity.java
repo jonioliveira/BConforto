@@ -122,13 +122,16 @@ public class MainActivity extends AppCompatActivity {
             }
 
             float hoursPrice;
+            float margin;
 
             Timber.i("Spinner position %s", estimateTypeSpinner.getSelectedItemPosition());
 
             if (estimateTypeSpinner.getSelectedItemPosition() == 0){
                 hoursPrice = Settings.getPriceResale(this);
+                margin = Settings.getMarginResale(this);
             }else {
                 hoursPrice = Settings.getPriceConsumer(this);
+                margin = Settings.getMarginConsumer(this);
             }
 
 
@@ -150,6 +153,7 @@ public class MainActivity extends AppCompatActivity {
                             ((Cloth) clothList.get(clothSpinner.getSelectedItemPosition())).getPrice(),
                             Double.parseDouble(clothMeters.getText().toString()),
                             priceFoam,
+                            margin,
                             discountValue);
 
                     DecimalFormat df = new DecimalFormat("#.###");
