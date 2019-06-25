@@ -38,6 +38,10 @@ public class ClothRecyclerViewAdapter extends RecyclerView.Adapter<ClothRecycler
         notifyDataSetChanged();
     }
 
+    public Cloth getItem(int position){
+        return clothList.get(position);
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(

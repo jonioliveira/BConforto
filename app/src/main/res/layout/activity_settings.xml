@@ -102,13 +102,36 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
-            android:text="@string/margin"
+            android:text="@string/margin_resale"
             android:layout_gravity="center_vertical"
             android:paddingStart="@dimen/pdStart"
             android:paddingEnd="@dimen/pdStart"/>
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/margin"
+            android:id="@+id/margin_resale"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:textAlignment="textEnd"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:weightSum="1"
+        >
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="@string/margin_consumer"
+            android:layout_gravity="center_vertical"
+            android:paddingStart="@dimen/pdStart"
+            android:paddingEnd="@dimen/pdStart"/>
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/margin_consumer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
