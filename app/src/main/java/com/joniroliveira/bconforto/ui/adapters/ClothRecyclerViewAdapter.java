@@ -1,7 +1,6 @@
 package com.joniroliveira.bconforto.ui.adapters;
 
-import android.content.Context;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +12,7 @@ import com.joniroliveira.bconforto.data.model.Cloth;
 import java.util.ArrayList;
 
 import io.realm.Realm;
+import io.realm.RealmResults;
 
 /**
  * Created by jonioliveira on 19/01/18.
@@ -21,13 +21,21 @@ import io.realm.Realm;
 public class ClothRecyclerViewAdapter extends RecyclerView.Adapter<ClothRecyclerViewAdapter.ViewHolder> {
 
     private ArrayList<Cloth> clothList;
+    private Realm realm;
 
-    public ClothRecyclerViewAdapter() {
+
+    public ClothRecyclerViewAdapter(Realm realm) {
+        this.realm = realm;
         getData();
     }
 
-    public void getData(){
-        clothList = new ArrayList(Realm.getDefaultInstance().where(Cloth.class).findAll());
+    private void getData(){
+        clothList = new ArrayList(realm.where(Cloth.class).findAll());
+    }
+
+    public void updateData(){
+        getData();
+        notifyDataSetChanged();
     }
 
     @Override
@@ -44,12 +52,23 @@ public class ClothRecyclerViewAdapter extends RecyclerView.Adapter<ClothRecycler
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.name.setText(clothList.get(position).getName());
-        holder.price.setText(String.valueOf(clothList.get(position).getPrice()));
+        holder.price.setText(String.valueOf(clothList.get(position).getPrice()) + " €");
     }
 
     @Override
     public int getItemCount() {
         return clothList.size();
+    }
+
+    public void removeData(int position) {
+        final Cloth cloth = clothList.get(position);
+        clothList.remove(position);
+        RealmResults<Cloth> id = realm.where(Cloth.class).equalTo("id", cloth.getId()).findAll();
+        realm.beginTransaction();
+        id.deleteAllFromRealm();
+        realm.commitTransaction();
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, clothList.size());
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{

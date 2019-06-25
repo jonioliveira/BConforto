@@ -12,10 +12,33 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:weightSum="1">
         <TextView
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:layout_gravity="start"
+            android:gravity="center_vertical"
+            android:paddingStart="10dp"
+            android:text="@string/estimate_type"/>
+
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:id="@+id/estimateTypeSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="43dp"
+            android:layout_weight="0.5">
+        </androidx.appcompat.widget.AppCompatSpinner>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:weightSum="1">
+        <TextView
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="0.5"
             android:layout_gravity="start"
@@ -23,22 +46,22 @@
             android:paddingStart="10dp"
             android:text="@string/horas"/>
 
-        <android.support.v7.widget.AppCompatEditText
+        <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/hours"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
             android:inputType="numberDecimal"
+            android:textAlignment="textEnd"
             />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="1">
+        android:orientation="vertical">
         <TextView
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="0.5"
             android:layout_gravity="start"
@@ -46,22 +69,23 @@
             android:paddingStart="10dp"
             android:text="@string/cloth"/>
 
-        <android.support.v7.widget.AppCompatSpinner
+        <androidx.appcompat.widget.AppCompatSpinner
             android:id="@+id/clothSpinner"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="43dp"
-            android:layout_weight="0.5">
-        </android.support.v7.widget.AppCompatSpinner>
+            android:layout_weight="0.5"
+            android:paddingStart="10dp">
+        </androidx.appcompat.widget.AppCompatSpinner>
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:weightSum="1">
         <TextView
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="0.5"
             android:layout_gravity="start"
@@ -69,22 +93,38 @@
             android:paddingStart="10dp"
             android:text="@string/metros"/>
 
-        <android.support.v7.widget.AppCompatEditText
+        <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/clothMeters"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
             android:inputType="numberDecimal"
+            android:textAlignment="textEnd"
             />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:weightSum="1"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp">
+
+        <CheckBox
+            android:id="@+id/foam"
+            android:paddingStart="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/foam" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:weightSum="1">
         <TextView
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="0.5"
             android:layout_gravity="start"
@@ -92,12 +132,13 @@
             android:paddingStart="10dp"
             android:text="@string/desconto"/>
 
-        <android.support.v7.widget.AppCompatEditText
+        <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/discount"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
             android:inputType="number"
+            android:textAlignment="textEnd"
             />
     </LinearLayout>
 

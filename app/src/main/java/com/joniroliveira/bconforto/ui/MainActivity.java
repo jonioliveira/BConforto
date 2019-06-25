@@ -1,12 +1,14 @@
 package com.joniroliveira.bconforto.ui;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatEditText;
-import android.support.v7.widget.AppCompatSpinner;
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatEditText;
+import androidx.appcompat.widget.AppCompatSpinner;
+import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,6 +49,12 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.priceWithoutTax)
     TextView priceWithoutTax;
 
+    @BindView(R.id.estimateTypeSpinner)
+    AppCompatSpinner estimateTypeSpinner;
+
+    @BindView(R.id.foam)
+    CheckBox foamCheckbox;
+
     Realm realm;
 
     private ArrayList clothList;
@@ -66,9 +74,11 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         realm = Realm.getDefaultInstance();
         clothList = new ArrayList(realm.where(Cloth.class).findAll());
-        Timber.i("asdf %s", clothList.size());
         SpinnerAdapter adapter = new ClothListAdapter(this, android.R.layout.simple_spinner_item, clothList);
         clothSpinner.setAdapter(adapter);
+        ArrayAdapter estimateAdapter = ArrayAdapter.createFromResource(this, R.array.estimate_type, android.R.layout.simple_spinner_item);
+        estimateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        estimateTypeSpinner.setAdapter(estimateAdapter);
     }
 
     @Override
@@ -111,27 +121,44 @@ public class MainActivity extends AppCompatActivity {
                 discountValue = Integer.parseInt(discount.getText().toString());
             }
 
-            float hoursPrice = Settings.getPrice(this);
+            float hoursPrice;
+
+            Timber.i("Spinner position %s", estimateTypeSpinner.getSelectedItemPosition());
+
+            if (estimateTypeSpinner.getSelectedItemPosition() == 0){
+                hoursPrice = Settings.getPriceResale(this);
+            }else {
+                hoursPrice = Settings.getPriceConsumer(this);
+            }
+
 
             if (hoursPrice == 0){
                 Toast.makeText(this, "O preço das horas não está definido", Toast.LENGTH_LONG).show();
             }else{
+                float priceFoam = Settings.getPriceFoam(this);
+                if (foamCheckbox.isChecked() && priceFoam == 0){
+                    Toast.makeText(this, "O preço da espuma não está definido", Toast.LENGTH_LONG).show();
+                }else{
 
-                CalculatePrice.Price calculate = CalculatePrice.calculate(
-                        Double.parseDouble(hours.getText().toString()),
-                        hoursPrice,
-                        ((Cloth) clothList.get(clothSpinner.getSelectedItemPosition())).getPrice(),
-                        Double.parseDouble(clothMeters.getText().toString()),
-                        discountValue);
+                    if (!foamCheckbox.isChecked()){
+                        priceFoam = 0;
+                    }
 
-                DecimalFormat df = new DecimalFormat("#.####");
-                df.setRoundingMode(RoundingMode.CEILING);
+                    CalculatePrice.Price calculate = CalculatePrice.calculate(
+                            Double.parseDouble(hours.getText().toString()),
+                            hoursPrice,
+                            ((Cloth) clothList.get(clothSpinner.getSelectedItemPosition())).getPrice(),
+                            Double.parseDouble(clothMeters.getText().toString()),
+                            priceFoam,
+                            discountValue);
 
-                priceWithTax.setText(df.format(calculate.getPriceWithTax()));
-                priceWithoutTax.setText(df.format(calculate.getPriceWithoutTax()));
+                    DecimalFormat df = new DecimalFormat("#.###");
+                    df.setRoundingMode(RoundingMode.CEILING);
+
+                    priceWithTax.setText(df.format(calculate.getPriceWithTax()));
+                    priceWithoutTax.setText(df.format(calculate.getPriceWithoutTax()));
+                }
             }
-
-
         }
     }
 }
