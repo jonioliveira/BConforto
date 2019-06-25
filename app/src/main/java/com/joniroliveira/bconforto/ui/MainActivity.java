@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             float hoursPrice;
-            int margin;
+            float margin;
 
             Timber.i("Spinner position %s", estimateTypeSpinner.getSelectedItemPosition());
 

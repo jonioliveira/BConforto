@@ -52,24 +52,24 @@ public class Settings {
 
     public static void writeMarginResale(Context context,  int value){
         SharedPreferences.Editor editor = context.getApplicationContext().getSharedPreferences(MyPREFERENCES, MODE_PRIVATE).edit();
-        editor.putFloat(PRICE_FOAM, value);
+        editor.putFloat(MARGIN_RESALE, value);
         editor.apply();
     }
 
-    public static int getMarginResale(Context context){
+    public static float getMarginResale(Context context){
         SharedPreferences preferences = context.getApplicationContext().getSharedPreferences(MyPREFERENCES, MODE_PRIVATE);
-        return preferences.getInt(MARGIN_RESALE, 0);
+        return preferences.getFloat(MARGIN_RESALE, 0);
     }
 
     public static void writeMarginConsumer(Context context,  int value){
         SharedPreferences.Editor editor = context.getApplicationContext().getSharedPreferences(MyPREFERENCES, MODE_PRIVATE).edit();
-        editor.putFloat(PRICE_FOAM, value);
+        editor.putFloat(MARGIN_CONSUMER, value);
         editor.apply();
     }
 
-    public static int getMarginConsumer(Context context){
+    public static float getMarginConsumer(Context context){
         SharedPreferences preferences = context.getApplicationContext().getSharedPreferences(MyPREFERENCES, MODE_PRIVATE);
-        return preferences.getInt(MARGIN_CONSUMER, 0);
+        return preferences.getFloat(MARGIN_CONSUMER, 0);
     }
 
 }
