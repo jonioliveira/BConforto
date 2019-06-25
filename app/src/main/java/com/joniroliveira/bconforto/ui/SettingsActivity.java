@@ -5,14 +5,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatEditText;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.support.v7.widget.helper.ItemTouchHelper;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatEditText;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
@@ -24,12 +23,12 @@ import com.joniroliveira.bconforto.ui.adapters.ClothRecyclerViewAdapter;
 import com.joniroliveira.bconforto.ui.controllers.SwipeController;
 import com.joniroliveira.bconforto.ui.controllers.SwipeControllerActions;
 
-import java.util.Set;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.realm.Realm;
+import io.realm.RealmQuery;
+import io.realm.RealmResults;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -39,6 +38,9 @@ public class SettingsActivity extends AppCompatActivity {
     @BindView(R.id.hour_consumer_price) AppCompatEditText hourConsumerPrice;
     @BindView(R.id.clothList) RecyclerView clothRecyclerView;
     @BindView(R.id.foam_price) AppCompatEditText foamPrice;
+    @BindView(R.id.margin_consumer) AppCompatEditText marginConsumer;
+    @BindView(R.id.margin_resale) AppCompatEditText marginResale;
+
     private ClothRecyclerViewAdapter clothRecyclerViewAdapter;
 
     public static void start(Context context) {
@@ -74,16 +76,26 @@ public class SettingsActivity extends AppCompatActivity {
         hourConsumerPrice.setText(String.valueOf(price));
         price = Settings.getPriceFoam(this);
         foamPrice.setText(String.valueOf(price));
+        marginConsumer.setText(String.valueOf(Settings.getMarginConsumer(this)));
+        marginResale.setText(String.valueOf(Settings.getMarginResale(this)));
 
         clothRecyclerViewAdapter = new ClothRecyclerViewAdapter(realm);
         clothRecyclerView.setAdapter(clothRecyclerViewAdapter);
-        clothRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        clothRecyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
 
         final SwipeController swipeController = new SwipeController(new SwipeControllerActions() {
             @Override
             public void onRightClicked(int position) {
                 clothRecyclerViewAdapter.removeData(position);
                 super.onRightClicked(position);
+            }
+
+            @Override
+            public void onLeftClicked(int position) {
+                clothRecyclerViewAdapter.getItem(position);
+                showUpdateDialog(clothRecyclerViewAdapter.getItem(position));
+                clothRecyclerViewAdapter.updateData();
+                super.onLeftClicked(position);
             }
         });
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeController);
@@ -95,6 +107,31 @@ public class SettingsActivity extends AppCompatActivity {
                 swipeController.onDraw(c);
             }
         });
+    }
+
+    private void showUpdateDialog(Cloth item) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        //you should edit this to fit your needs
+        builder.setTitle("Atualizar Pano");
+        LayoutInflater inflater = LayoutInflater.from(this);
+        final View alertView = inflater.inflate(R.layout.add_cloth, null);
+        ((AppCompatEditText)alertView.findViewById(R.id.cloth_name)).setText(item.getName());
+        ((AppCompatEditText)alertView.findViewById(R.id.cloth_price)).setText(String.valueOf(item.getPrice()));
+        builder.setView(alertView);
+        // Set up the buttons
+        builder.setPositiveButton("Ok", (dialog, whichButton) ->{
+
+                    realm.executeTransaction(realm -> {
+                        final RealmResults<Cloth> all = realm.where(Cloth.class).equalTo("name", item.getName()).and().equalTo("price", item.getPrice()).findAll();
+                        all.deleteAllFromRealm();
+                    });
+
+                    insertInDb(((AppCompatEditText)alertView.findViewById(R.id.cloth_name)).getText().toString(),
+                            ((AppCompatEditText)alertView.findViewById(R.id.cloth_price)).getText().toString());
+                });
+
+        builder.setNegativeButton("Cancelar", (dialog, whichButton) -> dialog.cancel());
+        builder.show();
     }
 
     @Override
@@ -117,17 +154,9 @@ public class SettingsActivity extends AppCompatActivity {
         final View alertView = inflater.inflate(R.layout.add_cloth, null);
         builder.setView(alertView);
         // Set up the buttons
-        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                insertInDb(((AppCompatEditText)alertView.findViewById(R.id.cloth_name)).getText().toString(), ((AppCompatEditText)alertView.findViewById(R.id.cloth_price)).getText().toString());
-            }
-        });
+        builder.setPositiveButton("Ok", (dialog, whichButton) -> insertInDb(((AppCompatEditText)alertView.findViewById(R.id.cloth_name)).getText().toString(), ((AppCompatEditText)alertView.findViewById(R.id.cloth_price)).getText().toString()));
 
-        builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                dialog.cancel();
-            }
-        });
+        builder.setNegativeButton("Cancelar", (dialog, whichButton) -> dialog.cancel());
         builder.show();
     }
 
@@ -135,10 +164,14 @@ public class SettingsActivity extends AppCompatActivity {
     public void save(){
         if (!hourConsumerPrice.getText().toString().isEmpty() &&
                 !hourResalePrice.getText().toString().isEmpty() &&
-                !foamPrice.getText().toString().isEmpty()){
+                !foamPrice.getText().toString().isEmpty() &&
+                !marginConsumer.getText().toString().isEmpty() &&
+                !marginResale.getText().toString().isEmpty()){
             Settings.writePriceResale(this, Float.parseFloat(hourResalePrice.getText().toString()));
             Settings.writePriceConsumer(this, Float.parseFloat(hourConsumerPrice.getText().toString()));
             Settings.writePriceFoam(this, Float.parseFloat(foamPrice.getText().toString()));
+            Settings.writeMarginConsumer(this, Integer.parseInt(marginConsumer.getText().toString()));
+            Settings.writeMarginResale(this, Integer.parseInt(marginResale.getText().toString()));
             Toast.makeText(SettingsActivity.this, "Preços gravados", Toast.LENGTH_SHORT).show();
         } else{
             Toast.makeText(SettingsActivity.this, "Um dos preços está em branco", Toast.LENGTH_SHORT).show();
@@ -146,25 +179,12 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void insertInDb(final String name, final String price) {
-        realm.executeTransactionAsync(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                Cloth cloth = new Cloth(name, Float.parseFloat(price));
-                realm.insertOrUpdate(cloth);
-            }
-        }, new Realm.Transaction.OnSuccess() {
-            @Override
-            public void onSuccess() {
-                Toast.makeText(SettingsActivity.this, "Pano adicionado", Toast.LENGTH_SHORT).show();
-                clothRecyclerViewAdapter.updateData();
-            }
-        }, new Realm.Transaction.OnError() {
-            @Override
-            public void onError(Throwable error) {
-                Toast.makeText(SettingsActivity.this, "Erro ao Adicionar o pano", Toast.LENGTH_SHORT).show();
-            }
-        });
+        realm.executeTransactionAsync(realm -> {
+            Cloth cloth = new Cloth(name, Float.parseFloat(price));
+            realm.insertOrUpdate(cloth);
+        }, () -> {
+            Toast.makeText(SettingsActivity.this, "Pano adicionado", Toast.LENGTH_SHORT).show();
+            clothRecyclerViewAdapter.updateData();
+        }, error -> Toast.makeText(SettingsActivity.this, "Erro ao Adicionar o pano", Toast.LENGTH_SHORT).show());
     }
-
-
 }

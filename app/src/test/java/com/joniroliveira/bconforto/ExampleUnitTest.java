@@ -18,7 +18,7 @@ public class ExampleUnitTest {
 
     @Test
     public void service_without_discount_isCorrect(){
-        CalculatePrice.Price calculate = CalculatePrice.calculate(1, 15, 1, 1, 0);
+        CalculatePrice.Price calculate = CalculatePrice.calculate(1, 15, 1, 1, 10, 10, 20);
         double price = ((1 * 15) + (1*1));
         assertEquals(calculate.getPriceWithTax(), price * 1.23 , 0);
         assertEquals(calculate.getPriceWithoutTax(), price, 0);
@@ -26,7 +26,7 @@ public class ExampleUnitTest {
 
     @Test
     public void service_with_discount_isCorrect(){
-        CalculatePrice.Price calculate = CalculatePrice.calculate(1, 15, 1, 1, 10);
+        CalculatePrice.Price calculate = CalculatePrice.calculate(1, 15, 1, 1, 10, 30, 0);
         double price = 16 - 1.6;
         assertEquals(calculate.getPriceWithTax(), price * 1.23 , 0.05);
         assertEquals(calculate.getPriceWithoutTax(), price, 0.05);
